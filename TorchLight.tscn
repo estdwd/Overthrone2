@@ -1,0 +1,108 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://Assets/TorchLight.png" type="Texture" id=1]
+[ext_resource path="res://Assets/Light1.1.png" type="Texture" id=2]
+
+[sub_resource type="GDScript" id=2]
+script/source = "extends Area2D
+
+onready var anim = $AnimationPlayer
+onready var player = get_node(\"/root/Main/Player\")
+var has_torch = false
+var torchOff = false
+
+
+
+func _ready():
+	pass
+	
+	
+	
+func _process(delta):
+	if has_torch == true:
+		pos()
+		
+		
+	if Input.is_action_just_pressed(\"TorchLight\") and torchOff == false:
+		self.visible = false
+		torchOff = true	
+	elif torchOff == true and Input.is_action_just_pressed(\"TorchLight\"):
+		self.visible = true
+		torchOff = false
+
+func pos ():
+	global_position = player.global_position
+func sc1():
+	if has_torch == true:
+		scale.x = -1
+func sc2():
+	if has_torch == true:
+		scale.x = 1
+
+func _on_TorchLight_body_entered(body):
+	if body.name == \"Player\":
+		has_torch = true
+		print(\"has torch\")
+"
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 11.5, 4 )
+
+[sub_resource type="Animation" id=3]
+resource_name = "Off"
+length = 0.3
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ false ]
+}
+
+[sub_resource type="Animation" id=4]
+resource_name = "On"
+length = 0.3
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 0.965936 ),
+"update": 1,
+"values": [ true ]
+}
+
+[node name="TorchLight" type="Area2D"]
+z_index = 1
+script = SubResource( 2 )
+
+[node name="Light2D" type="Light2D" parent="."]
+position = Vector2( 69, 0 )
+rotation = -1.5708
+scale = Vector2( 1, 2.27058 )
+z_index = -1
+texture = ExtResource( 2 )
+energy = 2.0
+range_height = 18.1
+shadow_color = Color( 0, 0, 0, 1 )
+
+[node name="Sprite" type="Sprite" parent="."]
+texture = ExtResource( 1 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( 0.5, 0 )
+shape = SubResource( 1 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/Off = SubResource( 3 )
+anims/On = SubResource( 4 )
+
+[connection signal="body_entered" from="." to="." method="_on_TorchLight_body_entered"]

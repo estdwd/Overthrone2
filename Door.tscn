@@ -1,0 +1,42 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://Assets/OpenD2.png" type="Texture" id=1]
+[ext_resource path="res://Door.gd" type="Script" id=2]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 3, 16 )
+
+[sub_resource type="GDScript" id=2]
+script/source = "extends Area2D
+
+
+func _ready():
+	pass
+func nom():
+	self.disconnect( \"body_entered\", self,\"_on_Door_body_entered\")
+"
+
+[node name="Door" type="StaticBody2D"]
+script = ExtResource( 2 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( 0.5, 15 )
+shape = SubResource( 1 )
+
+[node name="Sprite" type="Sprite" parent="."]
+position = Vector2( 14, 15 )
+texture = ExtResource( 1 )
+hframes = 2
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+root_node = NodePath("../Door")
+
+[node name="Door" type="Area2D" parent="."]
+script = SubResource( 2 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Door"]
+position = Vector2( 1, 15 )
+shape = SubResource( 1 )
+
+[connection signal="body_entered" from="Door" to="." method="_on_Door_body_entered"]
+[connection signal="body_entered" from="Door" to="Door" method="_on_Door_body_entered"]

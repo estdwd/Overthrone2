@@ -1,0 +1,50 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://Assets/Key.png" type="Texture" id=1]
+
+[sub_resource type="GDScript" id=3]
+script/source = "extends Control
+
+onready var ui = $Label
+onready var player = get_node(\"/root/Main/Player\")
+var keyse = 0
+
+func _process(delta):
+	set_text()
+	
+func addKey():
+	keyse += 1
+func subKey():
+	keyse -= 1
+	
+func _ready():
+	ui.text = \"0\"
+	
+func set_text():
+	ui.text = str(keyse)
+"
+
+[sub_resource type="DynamicFontData" id=1]
+font_path = "res://Assets/fairies/Fairies.otf"
+
+[sub_resource type="DynamicFont" id=2]
+size = 20
+font_data = SubResource( 1 )
+
+[node name="KeyUI" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = SubResource( 3 )
+
+[node name="Label" type="Label" parent="."]
+margin_left = 45.0
+margin_top = 9.0
+margin_right = 85.0
+margin_bottom = 66.0
+custom_fonts/font = SubResource( 2 )
+text = "0
+"
+
+[node name="Sprite" type="Sprite" parent="."]
+position = Vector2( 22, 23 )
+texture = ExtResource( 1 )
